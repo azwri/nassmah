@@ -60,7 +60,7 @@ def device_list(request):
     devices = SensorData.objects.values('device_id').distinct()
 
     # Pass the devices to the template
-    return render(request, 'device_list.html', {'devices': devices})
+    return render(request, 'arduino/device_list.html', {'devices': devices})
 
 
 
@@ -71,4 +71,4 @@ def device_detail(request, device_id):
     data = SensorData.objects.filter(device_id=device_id)
 
     # Pass the data to the template
-    return render(request, 'device_detail.html', {'data': data, 'device_id': device_id})
+    return render(request, 'arduino/device_detail.html', {'data': data, 'device_id': device_id})
