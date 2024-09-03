@@ -105,15 +105,19 @@ def device_map(request):
         "Brown (Hazardous)": "darkred"
     }
 
-    # Add markers for each device on the map
+    # Add CircleMarker for each device on the map
     for device in devices:
         # Determine the marker color based on AQI
         marker_color = aqi_color_map.get(device.aqi, "blue")  # Default to blue if AQI category is not recognized
 
-        folium.Marker(
+        folium.CircleMarker(
             location=[device.latitude, device.longitude],
+            radius=8,  # Size of the circle marker
             popup=f'Device ID: {device.device_id}<br>Temperature: {device.temperature} °C<br>Humidity: {device.humidity} %<br>AQI: {device.aqi}',
-            icon=folium.Icon(color=marker_color, icon='info-sign')
+            color=marker_color,  # Circle border color
+            fill=True,
+            fill_color=marker_color,  # Fill color matches the border color
+            fill_opacity=0.7  # Slight transparency for better visualization
         ).add_to(m)
 
     # Generate HTML representation of the map
