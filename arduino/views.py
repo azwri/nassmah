@@ -107,8 +107,11 @@ def device_map(request):
 
     # Add CircleMarker for each device on the map
     for device in devices:
-        # Determine the marker color based on AQI
-        marker_color = aqi_color_map.get(device.aqi, "blue")  # Default to blue if AQI category is not recognized
+        # Ensure the AQI category is correctly fetched and matched
+        marker_color = aqi_color_map.get(device.aqi.strip(), "blue")  # Use strip() to remove any extra spaces
+
+        # Debugging print to check the AQI value and color
+        print(f"Device ID: {device.device_id}, AQI: {device.aqi}, Color: {marker_color}")
 
         folium.CircleMarker(
             location=[device.latitude, device.longitude],
@@ -125,3 +128,4 @@ def device_map(request):
 
     # Pass the map to the template
     return render(request, 'arduino/device_map.html', {'map': map_html})
+
