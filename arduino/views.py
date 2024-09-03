@@ -95,32 +95,28 @@ def device_map(request):
     # Use a list comprehension to get the latest SensorData entries based on the latest timestamp for each device
     devices = [SensorData.objects.filter(device_id=data['device_id'], timestamp=data['latest_timestamp']).first() for data in latest_device_data]
 
-    # Define AQI color mapping
+    # Define AQI color mapping for icon colors
     aqi_color_map = {
-        "Green (Healthy)": "green",
-        "Yellow (Moderate)": "yellow",
-        "Orange (Unhealthy for Sensitive Groups)": "orange",
-        "Red (Unhealthy)": "red",
-        "Purple (Very Unhealthy)": "purple",
-        "Brown (Hazardous)": "darkred"
+        "Green (Healthy)": "#00FF00",  # green
+        "Yellow (Moderate)": "#FFFF00",  # yellow
+        "Orange (Unhealthy for Sensitive Groups)": "#FFA500",  # orange
+        "Red (Unhealthy)": "#FF0000",  # red
+        "Purple (Very Unhealthy)": "#800080",  # purple
+        "Brown (Hazardous)": "#8B4513"  # brown
     }
 
-    # Add CircleMarker for each device on the map
+    # Add markers for each device on the map
     for device in devices:
-        # Ensure the AQI category is correctly fetched and matched
-        marker_color = aqi_color_map.get(device.aqi.strip(), "blue")  # Use strip() to remove any extra spaces
+        # Determine the icon color based on AQI
+        icon_color = aqi_color_map.get(device.aqi.strip(), "#0000FF")  # Default to blue if AQI category is not recognized
 
         # Debugging print to check the AQI value and color
-        print(f"Device ID: {device.device_id}, AQI: {device.aqi}, Color: {marker_color}")
+        print(f"Device ID: {device.device_id}, AQI: {device.aqi}, Color: {icon_color}")
 
-        folium.CircleMarker(
+        folium.Marker(
             location=[device.latitude, device.longitude],
-            radius=8,  # Size of the circle marker
-            popup=f'Device ID: {device.device_id}<br>Temperature: {device.temperature} °C<br>Humidity: {device.humidity} %<br>AQI: {device.aqi}',
-            color=marker_color,  # Circle border color
-            fill=True,
-            fill_color=marker_color,  # Fill color matches the border color
-            fill_opacity=0.7  # Slight transparency for better visualization
+            popup=folium.Popup(f'Device ID: {device.device_id}<br>Temperature: {device.temperature} °C<br>Humidity: {device.humidity} %<br>AQI: {device.aqi}', max_width=300),
+            icon=folium.Icon(color='black', icon_color=icon_color)  # Set icon color
         ).add_to(m)
 
     # Generate HTML representation of the map
@@ -128,4 +124,5 @@ def device_map(request):
 
     # Pass the map to the template
     return render(request, 'arduino/device_map.html', {'map': map_html})
+
 
