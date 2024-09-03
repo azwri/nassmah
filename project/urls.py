@@ -21,7 +21,8 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path("", include('accounts.urls', namespace='accounts')),
+    # path("", include('accounts.urls', namespace='accounts')),
+    path('', include('arduino.urls')),
     path('arduino/', include('arduino.urls')),
     path('admin/', admin.site.urls),
 ]
