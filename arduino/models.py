@@ -8,7 +8,7 @@ class Device(models.Model):
     device_type = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"Device {self.device_id}: {self.device_name} ({self.device_type}) at {self.location}"
+        return f"Device {self.device_id}: {self.device_name} ({self.device_type})"
 
 
 class SensorData(models.Model):
