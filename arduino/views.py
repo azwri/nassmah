@@ -82,19 +82,36 @@ def device_detail(request, device_id):
 
 import folium
 
+import folium
+from django.shortcuts import render
+from .models import SensorData
+
 def device_map(request):
-    # Create a Folium map centered on a default location (e.g., center of all devices)
-    m = folium.Map(location=[18.2465, 42.5117], zoom_start=6)
+    # Create a Folium map centered on a default location
+    m = folium.Map(location=[23.8859, 45.0792], zoom_start=6)  # Centered on Saudi Arabia
 
     # Fetch all device data with their latest readings
     devices = SensorData.objects.all()
 
+    # Define AQI color mapping
+    aqi_color_map = {
+        "Green (Healthy)": "green",
+        "Yellow (Moderate)": "yellow",
+        "Orange (Unhealthy for Sensitive Groups)": "orange",
+        "Red (Unhealthy)": "red",
+        "Purple (Very Unhealthy)": "purple",
+        "Brown (Hazardous)": "darkred"
+    }
+
     # Add markers for each device on the map
     for device in devices:
+        # Determine the marker color based on AQI
+        marker_color = aqi_color_map.get(device.aqi, "blue")  # Default to blue if AQI category is not recognized
+
         folium.Marker(
             location=[device.latitude, device.longitude],
             popup=f'Device ID: {device.device_id}<br>Temperature: {device.temperature} °C<br>Humidity: {device.humidity} %<br>AQI: {device.aqi}',
-            icon=folium.Icon(color='blue', icon='info-sign')
+            icon=folium.Icon(color=marker_color, icon='info-sign')
         ).add_to(m)
 
     # Generate HTML representation of the map
