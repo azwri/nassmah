@@ -1,7 +1,9 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 import json
 from .models import SensorData  # Ensure your model is correctly imported
+
 
 @csrf_exempt  # Disable CSRF verification for this view
 def receive_data(request):
@@ -46,3 +48,27 @@ def receive_data(request):
     
     else:
         return JsonResponse({'status': 'error', 'message': 'Only POST requests are allowed'}, status=405)
+
+
+
+
+
+
+
+def device_list(request):
+    # Fetch all unique device IDs from the SensorData model
+    devices = SensorData.objects.values('device_id').distinct()
+
+    # Pass the devices to the template
+    return render(request, 'device_list.html', {'devices': devices})
+
+
+
+
+
+def device_detail(request, device_id):
+    # Fetch all sensor data for the specified device
+    data = SensorData.objects.filter(device_id=device_id)
+
+    # Pass the data to the template
+    return render(request, 'device_detail.html', {'data': data, 'device_id': device_id})
