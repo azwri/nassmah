@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import receive_data, device_list, device_detail
+from .views import receive_data, device_list, device_detail, device_map
 
 urlpatterns = [
     path('devices/', device_list, name='device_list'),
