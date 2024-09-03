@@ -17,10 +17,10 @@ Device List
                     <div class="card-body">
                         <h5 class="card-title">Device {{ device_id }}</h5>
                         <p class="card-text">
+                            <strong>Air Quality:</strong> {{ data.ppm }}<br>
                             <strong>Temperature:</strong> {{ data.temperature }} °C<br>
                             <strong>Humidity:</strong> {{ data.humidity }} %<br>
-                            <strong>AQI:</strong> {{ data.aqi }}<br>
-                            <strong>PPM:</strong> {{ data.ppm }}<br>
+                            <strong>Air Quality Index:</strong> {{ data.aqi }}<br>
                             <strong>Last Updated:</strong> {{ data.timestamp|date:"Y-m-d H:i:s" }}<br>
                         </p>
                         <a href="{% url 'device_detail' device_id %}" class="btn btn-primary">View Device Data</a>
