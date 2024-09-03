@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from .models import SensorData  # Import the SensorData model
 
 @csrf_exempt  # Disable CSRF verification for this view
 def receive_data(request):
@@ -17,9 +18,8 @@ def receive_data(request):
             # Log the received data (for debugging purposes)
             print(f"Received data: Temp={temperature}, Humidity={humidity}, AQI={aqi}")
 
-            # Here you can process the data or save it to the database
-            # For example:
-            # SensorData.objects.create(temperature=temperature, humidity=humidity, aqi=aqi)
+            # Save the data to the database
+            SensorData.objects.create(temperature=temperature, humidity=humidity, aqi=aqi)
 
             # Return a success response
             return JsonResponse({'status': 'success', 'message': 'Data received successfully'})
