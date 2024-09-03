@@ -1,26 +1,35 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .models import SensorData  # Import the SensorData model
+import json
+from .models import SensorData  # Ensure your model is correctly imported
 
-def receive_data(request, temperature, humidity, aqi, timestamp):
-    if request.method == 'GET':
+@csrf_exempt  # Disable CSRF verification for this view
+def receive_data(request):
+    if request.method == 'POST':
         try:
-            # Convert parameters to the appropriate types
-            temperature = float(temperature)
-            humidity = float(humidity)
-            aqi = str(aqi)
-            timestamp = str(timestamp)
+            # Parse the incoming JSON data
+            data = json.loads(request.body)
+
+            # Extract temperature, humidity, and AQI values from the JSON data
+            temperature = data.get('temperature')
+            humidity = data.get('humidity')
+            aqi = data.get('aqi')
+            timestamp = data.get('timestamp')
 
             # Log the received data (for debugging purposes)
             print(f"Received data: Temp={temperature}, Humidity={humidity}, AQI={aqi}, Timestamp={timestamp}")
 
             # Save the data to the database
-            SensorData.objects.create(temperature=temperature, humidity=humidity, aqi=aqi)
+            SensorData.objects.create(temperature=temperature, humidity=humidity, aqi=aqi, timestamp=timestamp)
 
             # Return a success response
             return JsonResponse({'status': 'success', 'message': 'Data received successfully'})
+        
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON format'}, status=400)
         
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
     else:
-        return JsonResponse({'status': 'error', 'message': 'Only GET requests are allowed'}, status=405)
+        return JsonResponse({'status': 'error', 'message': 'Only POST requests are allowed'}, status=405)
