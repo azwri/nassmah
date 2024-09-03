@@ -81,17 +81,19 @@ def device_detail(request, device_id):
 
 
 import folium
-
-import folium
 from django.shortcuts import render
 from .models import SensorData
+from django.db.models import Max
 
 def device_map(request):
     # Create a Folium map centered on a default location
     m = folium.Map(location=[23.8859, 45.0792], zoom_start=6)  # Centered on Saudi Arabia
 
-    # Fetch all device data with their latest readings
-    devices = SensorData.objects.all()
+    # Fetch the latest sensor data for each device using Max aggregation on the timestamp
+    latest_device_data = SensorData.objects.values('device_id').annotate(latest_timestamp=Max('timestamp'))
+
+    # Use a list comprehension to get the latest SensorData entries based on the latest timestamp for each device
+    devices = [SensorData.objects.filter(device_id=data['device_id'], timestamp=data['latest_timestamp']).first() for data in latest_device_data]
 
     # Define AQI color mapping
     aqi_color_map = {
