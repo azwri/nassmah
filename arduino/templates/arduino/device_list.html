@@ -15,13 +15,19 @@
 <div class="container mt-5">
     <h1 class="mb-4">Device List</h1>
     <div class="row">
-        {% for device in devices %}
+        {% for device_id, data in latest_data.items %}
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Device {{ device.device_id }}</h5>
-                        <p class="card-text">Check the details and data of Device {{ device.device_id }}.</p>
-                        <a href="{% url 'device_detail' device.device_id %}" class="btn btn-primary">View Device Data</a>
+                        <h5 class="card-title">Device {{ device_id }}</h5>
+                        <p class="card-text">
+                            <strong>Temperature:</strong> {{ data.temperature }} °C<br>
+                            <strong>Humidity:</strong> {{ data.humidity }} %<br>
+                            <strong>AQI:</strong> {{ data.aqi }}<br>
+                            <strong>PPM:</strong> {{ data.ppm }}<br>
+                            <strong>Last Updated:</strong> {{ data.timestamp|date:"Y-m-d H:i:s" }}<br>
+                        </p>
+                        <a href="{% url 'device_detail' device_id %}" class="btn btn-primary">View Device Data</a>
                     </div>
                 </div>
             </div>

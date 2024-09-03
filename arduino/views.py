@@ -55,12 +55,22 @@ def receive_data(request):
 
 
 
+
 def device_list(request):
     # Fetch all unique device IDs from the SensorData model
     devices = SensorData.objects.values('device_id').distinct()
 
-    # Pass the devices to the template
-    return render(request, 'arduino/device_list.html', {'devices': devices})
+    # Fetch the latest sensor data for each device
+    latest_data = {}
+    for device in devices:
+        device_id = device['device_id']
+        latest_entry = SensorData.objects.filter(device_id=device_id).order_by('-timestamp').first()
+        if latest_entry:
+            latest_data[device_id] = latest_entry
+
+    # Pass the devices and their latest data to the template
+    return render(request, 'arduino/device_list.html', {'latest_data': latest_data})
+
 
 
 
