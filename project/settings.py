@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'accounts.apps.AccountsConfig',
     'base.apps.BaseConfig',
+    'arduino.apps.ArduinoConfig',
 ]
 
 MIDDLEWARE = [
