@@ -10,17 +10,30 @@ def receive_data(request):
             # Parse the incoming JSON data
             data = json.loads(request.body)
 
-            # Extract temperature, humidity, and AQI values from the JSON data
+            # Extract data from the JSON payload
+            device_id = data.get('device_id')
             temperature = data.get('temperature')
             humidity = data.get('humidity')
             aqi = data.get('aqi')
+            ppm = data.get('ppm')
+            latitude = data.get('latitude', 18.2465)  # Default value if not provided
+            longitude = data.get('longitude', 42.5117)  # Default value if not provided
             timestamp = data.get('timestamp')
 
             # Log the received data (for debugging purposes)
-            print(f"Received data: Temp={temperature}, Humidity={humidity}, AQI={aqi}, Timestamp={timestamp}")
+            print(f"Received data: Device={device_id}, Temp={temperature}, Humidity={humidity}, AQI={aqi}, PPM={ppm}, Lat={latitude}, Long={longitude}, Timestamp={timestamp}")
 
             # Save the data to the database
-            SensorData.objects.create(temperature=temperature, humidity=humidity, aqi=aqi, timestamp=timestamp)
+            SensorData.objects.create(
+                device_id=device_id,
+                temperature=temperature,
+                humidity=humidity,
+                aqi=aqi,
+                ppm=ppm,
+                latitude=latitude,
+                longitude=longitude,
+                timestamp=timestamp
+            )
 
             # Return a success response
             return JsonResponse({'status': 'success', 'message': 'Data received successfully'})
