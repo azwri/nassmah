@@ -1,17 +1,9 @@
-# from django.db import models
-
-# class SensorData(models.Model):
-#     temperature = models.FloatField()
-#     humidity = models.FloatField()
-#     aqi = models.CharField(max_length=50)
-#     timestamp = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f"Temp: {self.temperature}, Humidity: {self.humidity}, AQI: {self.aqi}"
-
 from django.db import models
+from django.conf import settings
 
 class SensorData(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_type = models.CharField(max_length=50, default='user')
     device_id = models.IntegerField(default=0)
     temperature = models.FloatField()
     humidity = models.FloatField()
