@@ -1,20 +1,7 @@
 from django.db import models
-from django.conf import settings
-
-
-class Device(models.Model):
-    device_id = models.IntegerField(unique=True)
-    device_name = models.CharField(max_length=50)
-    device_type = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"Device {self.device_id}: {self.device_name} ({self.device_type})"
-
 
 class SensorData(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    user_type = models.CharField(max_length=50, default='user')
-    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    device_id = models.IntegerField(default=0)
     temperature = models.FloatField()
     humidity = models.FloatField()
     aqi = models.CharField(max_length=50)
