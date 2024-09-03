@@ -1,3 +1,5 @@
+# models.py
+
 from django.db import models
 
 class SensorData(models.Model):
@@ -8,7 +10,7 @@ class SensorData(models.Model):
     ppm = models.FloatField(blank=True, null=True)  # PPM is optional
     latitude = models.FloatField(default=18.2465)  # Default latitude
     longitude = models.FloatField(default=42.5117)  # Default longitude
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now_add=True)  # Automatically set timestamp
 
     def __str__(self):
         return f"Device {self.device_id}: Temp={self.temperature}, Humidity={self.humidity}, AQI={self.aqi}, PPM={self.ppm}, Location=({self.latitude}, {self.longitude}), Timestamp={self.timestamp}"

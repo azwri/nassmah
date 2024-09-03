@@ -20,12 +20,11 @@ def receive_data(request):
             ppm = data.get('ppm')
             latitude = data.get('latitude', 18.2465)  # Default value if not provided
             longitude = data.get('longitude', 42.5117)  # Default value if not provided
-            timestamp = data.get('timestamp')
 
             # Log the received data (for debugging purposes)
-            print(f"Received data: Device={device_id}, Temp={temperature}, Humidity={humidity}, AQI={aqi}, PPM={ppm}, Lat={latitude}, Long={longitude}, Timestamp={timestamp}")
+            print(f"Received data: Device={device_id}, Temp={temperature}, Humidity={humidity}, AQI={aqi}, PPM={ppm}, Lat={latitude}, Long={longitude}")
 
-            # Save the data to the database
+            # Save the data to the database (timestamp will be set automatically)
             SensorData.objects.create(
                 device_id=device_id,
                 temperature=temperature,
@@ -33,8 +32,7 @@ def receive_data(request):
                 aqi=aqi,
                 ppm=ppm,
                 latitude=latitude,
-                longitude=longitude,
-                timestamp=timestamp
+                longitude=longitude
             )
 
             # Return a success response
@@ -48,8 +46,6 @@ def receive_data(request):
     
     else:
         return JsonResponse({'status': 'error', 'message': 'Only POST requests are allowed'}, status=405)
-
-
 
 
 
