@@ -27,10 +27,11 @@ SECRET_KEY = local_settings.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-if not DEBUG:
-    ALLOWED_HOSTS = local_settings.ALLOWED_HOSTS
-else:
-    ALLOWED_HOSTS = []
+# if not DEBUG:
+#     ALLOWED_HOSTS = local_settings.ALLOWED_HOSTS
+# else:
+#     ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["164.90.165.99", "nassmah.com", "www.nassmah.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
