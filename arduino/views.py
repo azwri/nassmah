@@ -2,7 +2,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 from .models import SensorData, Device  # Ensure your models are correctly imported
-from django.contrib.auth.models import User  # Import User model to reference the user
+from django.conf import settings  # Import settings to get the custom user model
+
+# Get the custom user model
+User = settings.AUTH_USER_MODEL
 
 @csrf_exempt  # Disable CSRF verification for this view
 def receive_data(request):
