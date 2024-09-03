@@ -78,3 +78,27 @@ def device_detail(request, device_id):
 
     # Pass the data to the template
     return render(request, 'arduino/device_detail.html', {'data': data, 'device_id': device_id})
+
+
+import folium
+
+def device_map(request):
+    # Create a Folium map centered on a default location (e.g., center of all devices)
+    m = folium.Map(location=[18.2465, 42.5117], zoom_start=6)
+
+    # Fetch all device data with their latest readings
+    devices = SensorData.objects.all()
+
+    # Add markers for each device on the map
+    for device in devices:
+        folium.Marker(
+            location=[device.latitude, device.longitude],
+            popup=f'Device ID: {device.device_id}<br>Temperature: {device.temperature} °C<br>Humidity: {device.humidity} %<br>AQI: {device.aqi}',
+            icon=folium.Icon(color='blue', icon='info-sign')
+        ).add_to(m)
+
+    # Generate HTML representation of the map
+    map_html = m._repr_html_()
+
+    # Pass the map to the template
+    return render(request, 'arduino/device_map.html', {'map': map_html})
