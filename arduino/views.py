@@ -87,7 +87,7 @@ from django.db.models import Max
 
 def device_map(request):
     # Create a Folium map centered on a default location
-    m = folium.Map(location=[23.8859, 45.0792], zoom_start=6)  # Centered on Saudi Arabia
+    m = folium.Map(location=[23.8859, 45.0792], zoom_start=12)  # Centered on Saudi Arabia
 
     # Fetch the latest sensor data for each device using Max aggregation on the timestamp
     latest_device_data = SensorData.objects.values('device_id').annotate(latest_timestamp=Max('timestamp'))
