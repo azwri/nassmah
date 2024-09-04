@@ -3,7 +3,7 @@ from .models import SensorData
 
 @admin.register(SensorData)
 class SensorDataAdmin(admin.ModelAdmin):
-    list_display = ('temperature', 'humidity', 'aqi', 'ppm')
-    list_filter = ('temperature', 'humidity', 'aqi', 'ppm', )
-    search_fields = ('temperature', 'humidity', 'aqi', 'ppm',)
+    list_display = ('temperature', 'humidity' , 'ppm', 'aqi')
+    list_filter = ('temperature', 'humidity', 'ppm', 'aqi', )
+    search_fields = ('temperature', 'humidity', 'ppm', 'aqi',)
 
