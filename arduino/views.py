@@ -95,30 +95,12 @@ def device_map(request):
     # Use a list comprehension to get the latest SensorData entries based on the latest timestamp for each device
     devices = [SensorData.objects.filter(device_id=data['device_id'], timestamp=data['latest_timestamp']).first() for data in latest_device_data]
 
-    # Define AQI color mapping for icon colors
-    aqi_color_map = {
-        "Green (Healthy)": "green",
-        "Yellow (Moderate)": "yellow",
-        "Orange (Unhealthy for Sensitive Groups)": "orange",
-        "Red (Unhealthy)": "red",
-        "Purple (Very Unhealthy)": "purple",
-        "Brown (Hazardous)": "darkred"
-    }
-
-    # Add markers for each device on the map
+     # Add markers for each device on the map
     for device in devices:
-        # Determine the icon color based on AQI
-        icon_color = aqi_color_map.get(device.aqi.strip(), "blue")  # Default to blue if AQI category is not recognized
-
-        # Debugging print to check the AQI value and color
-        print(f"Device ID: {device.device_id}, AQI: {device.aqi}, Color: {icon_color}")
-
-        # Use Folium Marker with FontAwesome icon
         folium.Marker(
             location=[device.latitude, device.longitude],
-            popup=folium.Popup(f'Device ID: {device.device_id}<br>Temperature: {device.temperature} °C<br>Humidity: {device.humidity} %<br>AQI: {device.aqi}', max_width=300),
-            tooltip=f"Device {device.device_id}",  # Tooltip to display device ID
-            icon=folium.Icon(icon="cloud", icon_color="white", color=icon_color, prefix='fa')  # Use FontAwesome icon with dynamic color
+            popup=f'Device ID: {device.device_id}<br>Temperature: {device.temperature} °C<br>Humidity: {device.humidity} %<br>AQI: {device.aqi}',
+            icon=folium.Icon(color='blue', icon='info-sign')
         ).add_to(m)
 
     # Generate HTML representation of the map
